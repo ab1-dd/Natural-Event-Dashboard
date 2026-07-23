@@ -1,19 +1,16 @@
 package entity;
 
-public class EventLocationPoint implements EventLocationInterface{
+public class PointEventCoordinates {
     private final double latitude;
     private final double longitude;
-    private final String time;
 
 
-    public EventLocationPoint(double latitude, double longitude, String time){
+    public PointEventCoordinates(double latitude, double longitude, String date){
         this.latitude = latitude;
         this.longitude = longitude;
-        this.time = time;
     }
 
     public String getLocation(){
         return String.format("%f° N, %f° W", latitude, longitude);
     }
-
 }
