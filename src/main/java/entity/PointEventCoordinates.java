@@ -1,16 +1,21 @@
 package entity;
 
-public class PointEventCoordinates {
-    private final double latitude;
-    private final double longitude;
+public class PointEventCoordinates implements EventCoordinates {
+    private PointCoordinates pointCoordinates;
+    private String date;
 
 
     public PointEventCoordinates(double latitude, double longitude, String date){
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.pointCoordinates = new PointCoordinates(latitude, longitude);
+        this.date = date;
     }
 
-    public String getLocation(){
-        return String.format("%f° N, %f° W", latitude, longitude);
+    public PointEventCoordinates(PointCoordinates pointCoordinates, String date){
+        this.pointCoordinates = pointCoordinates;
+        this.date = date;
+    }
+
+    public String getCoordinates(){
+        return String.format("%f° N, %f° W", pointCoordinates.getLatitude(), pointCoordinates.getLongitude());
     }
 }
