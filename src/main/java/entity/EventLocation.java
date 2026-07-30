@@ -16,4 +16,16 @@ public class EventLocation {
     public String getCoordinates() {
         return coordinates.getCoordinates();
     }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getMagnitudeUnit() {
+        return magnitudeUnit;
+    }
+
+    public Double getMagnitudeValue() {
+        return magnitudeValue;
+    }
 }

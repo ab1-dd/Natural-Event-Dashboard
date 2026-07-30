@@ -1,8 +1,8 @@
 package entity;
 
 public class PointEventCoordinates implements EventCoordinates {
-    private PointCoordinates pointCoordinates;
-    private String date;
+    private final PointCoordinates pointCoordinates;
+    private final String date;
 
 
     public PointEventCoordinates(double latitude, double longitude, String date){
