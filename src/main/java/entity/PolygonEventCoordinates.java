@@ -19,9 +19,23 @@ public class PolygonEventCoordinates implements EventCoordinates{
         this.date = date;
     }
 
+    @Override
+    public String getCoordinates() {
+        if (outterRing == null || outterRing.getPointCoordinatesList().isEmpty()) {
+            return "Polygon (No coordinates)";
+        }
 
+        // take the first coordinate poit of outter ring as beginning
+        PointCoordinates firstPoint = outterRing.getPointCoordinatesList().get(0);
+        int totalPoints = outterRing.size();
 
-    public String getCoordinates(){
-        return
+        // combine readable texts, e.g.："Polygon starting at 45.000000° N, 75.000000° W (8 vertices)"
+        if (innerRing != null && !innerRing.isEmpty()) {
+            return String.format("Polygon starting at %.4f° N, %.4f° W (%d outer vertices, %d inner rings)",
+                    firstPoint.getLatitude(), firstPoint.getLongitude(), totalPoints, innerRing.size());
+        } else {
+            return String.format("Polygon starting at %.4f° N, %.4f° W (%d vertices)",
+                    firstPoint.getLatitude(), firstPoint.getLongitude(), totalPoints);
+        }
     }
 }
