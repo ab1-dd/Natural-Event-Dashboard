@@ -4,6 +4,9 @@ import java.util.List;
 
 /**
  * The representation of an Event in our program.
+ * it contains the data from the API of EONET
+ * the location could be change from time to time, so eventLocation is a list of location
+ * the location could be two types: Point or Polygon
  */
 public class NaturalEvent {
     private String eventId;

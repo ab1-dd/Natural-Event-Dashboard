@@ -2,6 +2,13 @@ package entity;
 
 import java.util.List;
 
+/**
+ * This class represent a different type of location: Polygon.
+ * Which is made of multiple point coordinate so by linking those point, we have a polygon stands for the area
+ * I call the polygon as ring
+ * There are outter ring and inner ring, if there is any inner ring,
+ * then the area between outter one and the inner one is where the event is happening.
+ */
 public class PolygonEventCoordinates implements EventCoordinates{
     private Ring outterRing;
     private List<Ring> innerRing;
