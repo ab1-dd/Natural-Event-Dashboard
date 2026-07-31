@@ -1,8 +1,12 @@
 package entity;
 
+/**
+ * This class represent a coordinate of a point which is a location for an event.
+ * basically a point coordinate with a date
+ */
 public class PointEventCoordinates implements EventCoordinates {
-    private PointCoordinates pointCoordinates;
-    private String date;
+    private final PointCoordinates pointCoordinates;
+    private final String date;
 
 
     public PointEventCoordinates(double latitude, double longitude, String date){
