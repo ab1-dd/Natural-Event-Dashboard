@@ -27,8 +27,8 @@ public class SearchView extends JPanel implements PropertyChangeListener {
     // leaves the category filter blank so EONET returns every category.
     private static final String ALL_CATEGORIES = "All Categories";
     private static final String[] CATEGORY_OPTIONS = {
-            ALL_CATEGORIES, "wildfires", "severeStorms", "volcanoes", "drought",
-            "earthquakes", "floods", "landslides", "seaLakeIce", "snow", "tempExtremes"
+            ALL_CATEGORIES, "Wildfires", "Severe Storms", "Volcanoes", "Drought",
+            "Earthquakes", "Floods", "Landslides", "Sea/Lake Ice", "Snow", "Temp Extremes"
     };
 
     private static final String[] STATUS_OPTIONS = {"Active", "Closed", "All"};
