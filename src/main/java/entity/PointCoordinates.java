@@ -1,5 +1,8 @@
 package entity;
 
+/**
+ * This class represent a coordinate of a point on the map
+ */
 public class PointCoordinates {
     private final double latitude;
     private final double longitude;

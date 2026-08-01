@@ -2,6 +2,9 @@ package entity;
 
 import java.util.List;
 
+/**
+ * This class represent a Ring, which is made of multiple point coordinates, so it circle an area.
+ */
 public class Ring {
     private final List<PointCoordinates> pointCoordinatesList;
 
