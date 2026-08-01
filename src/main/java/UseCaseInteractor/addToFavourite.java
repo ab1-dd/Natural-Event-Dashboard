@@ -1,6 +1,6 @@
 package UseCaseInteractor;
 
-import InputBoundry.addToFavouriteInterface;
+import InputBoundary.addToFavouriteInterface;
 import entity.FavouriteList;
 import entity.NaturalEvent;
 

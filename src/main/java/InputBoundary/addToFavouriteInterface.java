@@ -1,4 +1,4 @@
-package InputBoundry;
+package InputBoundary;
 
 import entity.NaturalEvent;
 

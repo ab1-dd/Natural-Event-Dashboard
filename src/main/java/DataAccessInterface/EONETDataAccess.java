@@ -1,4 +1,4 @@
-package DataAcessInterface;
+package DataAccessInterface;
 
 public interface EONETDataAccess {
 
