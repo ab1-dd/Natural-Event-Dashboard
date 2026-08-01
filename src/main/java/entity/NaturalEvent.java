@@ -24,6 +24,7 @@ public class NaturalEvent {
         this.sourceLinks = sourceLinks;
         this.isClosed = isClosed;
         this.eventLocation =eventLocation;
+        this.eventDate = eventDate;
     }
 
     public boolean isOpen(){
