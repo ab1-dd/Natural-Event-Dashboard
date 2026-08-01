@@ -1,17 +1,17 @@
-package UseCaseInteractor;
+package use_case.addToFavourite;
 
-import InputBoundary.addToFavouriteInterface;
 import entity.FavouriteList;
 import entity.NaturalEvent;
 
-public class addToFavourite implements addToFavouriteInterface {
+public class AddToFavouriteInteractor implements AddToFavouriteInputBoundary {
     private final FavouriteList favouriteList;
 
-    public addToFavourite(FavouriteList favouriteList) {
+    public AddToFavouriteInteractor(FavouriteList favouriteList) {
         this.favouriteList = favouriteList;
     }
 
     public void addFavourite(NaturalEvent naturalEvent){
         favouriteList.addNaturalEvent(naturalEvent);
+        System.out.println("Add to favourite successfully!");
     }
 }
