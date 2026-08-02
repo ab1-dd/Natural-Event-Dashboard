@@ -115,14 +115,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
         EventTableRow selectedEventRow = state.getRows().get(selectedRow);
 
         // Calling AddToFavouriteController
-        if(addToFavouriteController.execute(selectedEventRow.getRawEvent())){
-            // Show success message
-            JOptionPane.showMessageDialog(this, "Successfully add【" + selectedEventRow.getTitle() + "】to favourite list");
-        }else{
-            JOptionPane.showMessageDialog(this, "Failed to add【" + selectedEventRow.getTitle() + "】to favourite list, because it already existed in favourite.");
-        }
-
-
+        addToFavouriteController.execute(selectedEventRow.getRawEvent());
     }
 
     private void onSearch() {

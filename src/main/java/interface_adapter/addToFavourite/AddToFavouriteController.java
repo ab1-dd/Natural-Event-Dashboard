@@ -10,7 +10,7 @@ public class AddToFavouriteController {
         this.interactor = interactor;
     }
 
-    public boolean execute(NaturalEvent event) {
-        return interactor.addFavourite(event);
+    public void execute(NaturalEvent event) {
+        interactor.addFavourite(event);
     }
 }

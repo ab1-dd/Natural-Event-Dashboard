@@ -16,13 +16,16 @@ public class FavouriteList {
         return naturalEventList;
     }
 
+    /**
+     * @param naturalEvent a natural event.
+     * @return a boolean type, false if naturalEvent already exist in favourite list, return true otherwise.
+     */
     public boolean addNaturalEvent(NaturalEvent naturalEvent){
         for (NaturalEvent existingEvent : naturalEventList) {
             if (existingEvent.getEventId().equals(naturalEvent.getEventId())) {
-                return false; // 已存在，不重复添加，返回 false
+                return false;
             }
         }
-
         naturalEventList.add(naturalEvent);
         return true;
     }

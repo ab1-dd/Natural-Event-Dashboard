@@ -5,18 +5,20 @@ import entity.NaturalEvent;
 
 public class AddToFavouriteInteractor implements AddToFavouriteInputBoundary {
     private final FavouriteList favouriteList;
+    private final AddToFavouriteOutputBoundary presenter;
 
-    public AddToFavouriteInteractor(FavouriteList favouriteList) {
+    public AddToFavouriteInteractor(FavouriteList favouriteList, AddToFavouriteOutputBoundary presenter) {
         this.favouriteList = favouriteList;
+        this.presenter = presenter;
     }
 
-    public boolean addFavourite(NaturalEvent naturalEvent) {
-        if (favouriteList.addNaturalEvent(naturalEvent)) {
-            System.out.println("Add to favourite successfully!");
-            return true;
+    @Override
+    public void addFavourite(NaturalEvent naturalEvent) {
+        boolean isAdded = favouriteList.addNaturalEvent(naturalEvent);
+        if (isAdded) {
+            presenter.prepareSuccessView(naturalEvent.getTitle());
         }else{
-            System.out.println("The event has been added to favourite.");
-            return false;
+            presenter.prepareFailView(naturalEvent.getTitle(), "This event is ALREADY in your favourite list!");
         }
     }
 }
