@@ -1,15 +1,24 @@
 package app;
 
 import data_access.EonetEventDataAccessObject;
+import entity.FavouriteList;
+import entity.NaturalEvent;
 import interface_adapter.search_events.SearchController;
 import interface_adapter.search_events.SearchPresenter;
 import interface_adapter.search_events.SearchViewModel;
+import interface_adapter.addToFavourite.AddToFavouriteController;
+import use_case.addToFavourite.AddToFavouriteInputBoundary;
+import use_case.addToFavourite.AddToFavouriteInteractor;
 import use_case.search_events.EventDataAccessInterface;
 import use_case.search_events.SearchEventsInputBoundary;
 import use_case.search_events.SearchEventsInteractor;
 import use_case.search_events.SearchEventsOutputBoundary;
+import view.FavouriteView;
 import view.MainFrame;
 import view.SearchView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Wires up every layer (data access -> use case -> interface adapters ->
@@ -26,8 +35,14 @@ public class AppBuilder {
         SearchEventsInputBoundary searchInteractor = new SearchEventsInteractor(eventDataAccess, searchPresenter);
         SearchController searchController = new SearchController(searchInteractor);
 
-        SearchView searchView = new SearchView(searchController, searchViewModel);
+        List<NaturalEvent> emptyList = new ArrayList<>();
+        FavouriteList favouriteList = new FavouriteList(emptyList); // create instance of favourite list
+        AddToFavouriteInputBoundary addToFavouriteInteractor = new AddToFavouriteInteractor(favouriteList);
+        AddToFavouriteController addToFavouriteController = new AddToFavouriteController(addToFavouriteInteractor);
 
-        return new MainFrame(searchView);
+        SearchView searchView = new SearchView(searchController, searchViewModel, addToFavouriteController);
+        FavouriteView favouriteView = new FavouriteView(favouriteList);
+
+        return new MainFrame(searchView, favouriteView);
     }
 }

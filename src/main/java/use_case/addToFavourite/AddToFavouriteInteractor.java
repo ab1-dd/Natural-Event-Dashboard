@@ -10,8 +10,13 @@ public class AddToFavouriteInteractor implements AddToFavouriteInputBoundary {
         this.favouriteList = favouriteList;
     }
 
-    public void addFavourite(NaturalEvent naturalEvent){
-        favouriteList.addNaturalEvent(naturalEvent);
-        System.out.println("Add to favourite successfully!");
+    public boolean addFavourite(NaturalEvent naturalEvent) {
+        if (favouriteList.addNaturalEvent(naturalEvent)) {
+            System.out.println("Add to favourite successfully!");
+            return true;
+        }else{
+            System.out.println("The event has been added to favourite.");
+            return false;
+        }
     }
 }

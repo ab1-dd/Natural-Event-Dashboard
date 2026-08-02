@@ -16,7 +16,14 @@ public class FavouriteList {
         return naturalEventList;
     }
 
-    public void addNaturalEvent(NaturalEvent naturalEvent){
+    public boolean addNaturalEvent(NaturalEvent naturalEvent){
+        for (NaturalEvent existingEvent : naturalEventList) {
+            if (existingEvent.getEventId().equals(naturalEvent.getEventId())) {
+                return false; // 已存在，不重复添加，返回 false
+            }
+        }
+
         naturalEventList.add(naturalEvent);
+        return true;
     }
 }

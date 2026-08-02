@@ -8,11 +8,21 @@ import javax.swing.*;
  */
 public class MainFrame extends JFrame {
 
-    public MainFrame(SearchView searchView) {
+    public MainFrame(SearchView searchView, FavouriteView favouriteView) {
         super("Natural Event Watch Dashboard");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setContentPane(searchView);
-        setSize(900, 600);
+        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.addTab("🔍 Search Events", searchView);
+        tabbedPane.addTab("❤️ My Favourites", favouriteView);
+
+        tabbedPane.addChangeListener(e -> {
+            if (tabbedPane.getSelectedIndex() == 1) { // 1 stands for second Tab
+                favouriteView.updateView();
+            }
+        });
+
+        setContentPane(tabbedPane);
+        setSize(950, 650);
         setLocationRelativeTo(null);
     }
 }
