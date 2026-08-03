@@ -5,6 +5,7 @@ import interface_adapter.search_events.EventTableRow;
 import interface_adapter.search_events.SearchController;
 import interface_adapter.search_events.SearchState;
 import interface_adapter.search_events.SearchViewModel;
+import interface_adapter.addToFavourite.AddToFavouriteController;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -41,10 +42,11 @@ public class SearchView extends JPanel implements PropertyChangeListener {
     private final JSpinner daysBackSpinner = new JSpinner(new SpinnerNumberModel(30, 1, 3650, 1));
     private final JSpinner resultLimitSpinner = new JSpinner(new SpinnerNumberModel(50, 1, 500, 1));
     private final JButton searchButton = new JButton("Search");
+    private final JButton favoriteButton = new JButton("❤️ Add To Favourite");
     private final JLabel statusLabel = new JLabel(" ");
 
     private final DefaultTableModel tableModel = new DefaultTableModel(
-            new Object[]{"Title", "Category", "Status", "Event Date", "Coordinates"}, 0) {
+            new Object[]{"Title", "Category", "Status", "Event Date", "Coordinates"}, 0) { //new button for addToFavourite
         @Override
         public boolean isCellEditable(int row, int column) {
             return false;
@@ -52,9 +54,12 @@ public class SearchView extends JPanel implements PropertyChangeListener {
     };
     private final JTable resultsTable = new JTable(tableModel);
 
-    public SearchView(SearchController controller, SearchViewModel viewModel) {
+    private final AddToFavouriteController addToFavouriteController;
+
+    public SearchView(SearchController controller, SearchViewModel viewModel, AddToFavouriteController addToFavouriteController) {
         this.controller = controller;
         this.viewModel = viewModel;
+        this.addToFavouriteController = addToFavouriteController;
         this.viewModel.addPropertyChangeListener(this);
 
         setLayout(new BorderLayout(8, 8));
@@ -62,7 +67,13 @@ public class SearchView extends JPanel implements PropertyChangeListener {
 
         add(buildFilterPanel(), BorderLayout.NORTH);
         add(new JScrollPane(resultsTable), BorderLayout.CENTER);
-        add(statusLabel, BorderLayout.SOUTH);
+        // changed the bottom panel, put statusLabel and Favourite button together
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(statusLabel, BorderLayout.WEST);
+        bottomPanel.add(favoriteButton, BorderLayout.EAST); // 收藏按钮放在右下角
+        add(bottomPanel, BorderLayout.SOUTH);
+
+        favoriteButton.addActionListener(e -> onAddToFavourite());
 
         searchButton.addActionListener(event -> onSearch());
 
@@ -87,6 +98,24 @@ public class SearchView extends JPanel implements PropertyChangeListener {
         panel.add(searchButton);
 
         return panel;
+    }
+
+    private void onAddToFavourite() {
+        // Get which event/line the use picked
+        int selectedRow = resultsTable.getSelectedRow();
+
+        // if no natural event is being chosen, show the message
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select which event you want to add to favourite list!", "hint", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Get the real data from State of ViewModel
+        SearchState state = viewModel.getState();
+        EventTableRow selectedEventRow = state.getRows().get(selectedRow);
+
+        // Calling AddToFavouriteController
+        addToFavouriteController.execute(selectedEventRow.getRawEvent());
     }
 
     private void onSearch() {

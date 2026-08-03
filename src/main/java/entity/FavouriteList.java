@@ -16,7 +16,17 @@ public class FavouriteList {
         return naturalEventList;
     }
 
-    public void addNaturalEvent(NaturalEvent naturalEvent){
+    /**
+     * @param naturalEvent a natural event.
+     * @return a boolean type, false if naturalEvent already exist in favourite list, return true otherwise.
+     */
+    public boolean addNaturalEvent(NaturalEvent naturalEvent){
+        for (NaturalEvent existingEvent : naturalEventList) {
+            if (existingEvent.getEventId().equals(naturalEvent.getEventId())) {
+                return false;
+            }
+        }
         naturalEventList.add(naturalEvent);
+        return true;
     }
 }

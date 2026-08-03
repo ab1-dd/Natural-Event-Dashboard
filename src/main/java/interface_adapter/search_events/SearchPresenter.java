@@ -43,6 +43,7 @@ public class SearchPresenter implements SearchEventsOutputBoundary {
         }
 
         return new EventTableRow(
+                event,
                 event.getEventId(),
                 event.getTitle(),
                 event.hasCategory() ? event.getCategoryID() : "Uncategorized",
