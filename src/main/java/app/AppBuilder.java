@@ -4,6 +4,9 @@ import data_access.EonetEventDataAccessObject;
 import entity.FavouriteList;
 import entity.NaturalEvent;
 import interface_adapter.addToFavourite.AddToFavouritePresenter;
+import interface_adapter.generateChart.ChartViewModel;
+import interface_adapter.generateChart.GenerateChartController;
+import interface_adapter.generateChart.GenerateChartPresenter;
 import interface_adapter.search_events.SearchController;
 import interface_adapter.search_events.SearchPresenter;
 import interface_adapter.search_events.SearchViewModel;
@@ -11,6 +14,9 @@ import interface_adapter.addToFavourite.AddToFavouriteController;
 import use_case.addToFavourite.AddToFavouriteInputBoundary;
 import use_case.addToFavourite.AddToFavouriteInteractor;
 import use_case.addToFavourite.AddToFavouriteOutputBoundary;
+import use_case.generateChart.GenerateChartInputBoundary;
+import use_case.generateChart.GenerateChartInteractor;
+import use_case.generateChart.GenerateChartOutputBoundary;
 import use_case.search_events.EventDataAccessInterface;
 import use_case.search_events.SearchEventsInputBoundary;
 import use_case.search_events.SearchEventsInteractor;
@@ -37,13 +43,21 @@ public class AppBuilder {
         SearchEventsInputBoundary searchInteractor = new SearchEventsInteractor(eventDataAccess, searchPresenter);
         SearchController searchController = new SearchController(searchInteractor);
 
+        // for favourite usecase
         List<NaturalEvent> emptyList = new ArrayList<>();
         FavouriteList favouriteList = new FavouriteList(emptyList); // create instance of favourite list
         AddToFavouriteOutputBoundary addToFavouritePresenter = new AddToFavouritePresenter();
         AddToFavouriteInputBoundary addToFavouriteInteractor = new AddToFavouriteInteractor(favouriteList, addToFavouritePresenter);
         AddToFavouriteController addToFavouriteController = new AddToFavouriteController(addToFavouriteInteractor);
 
-        SearchView searchView = new SearchView(searchController, searchViewModel, addToFavouriteController);
+        // for frequency chart usecase
+        ChartViewModel chartViewModel = new ChartViewModel();
+        GenerateChartOutputBoundary chartPresenter = new GenerateChartPresenter(chartViewModel);
+        GenerateChartInputBoundary chartInteractor = new GenerateChartInteractor(chartPresenter);
+        GenerateChartController generateChartController = new GenerateChartController(chartInteractor);
+
+        SearchView searchView = new SearchView(searchController, searchViewModel, addToFavouriteController, generateChartController,
+                chartViewModel);
         FavouriteView favouriteView = new FavouriteView(favouriteList);
 
         return new MainFrame(searchView, favouriteView);
