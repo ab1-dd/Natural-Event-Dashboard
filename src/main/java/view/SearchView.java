@@ -1,6 +1,9 @@
 package view;
 
 import entity.EventFilter;
+import entity.NaturalEvent;
+import interface_adapter.generateChart.ChartViewModel;
+import interface_adapter.generateChart.GenerateChartController;
 import interface_adapter.search_events.EventTableRow;
 import interface_adapter.search_events.SearchController;
 import interface_adapter.search_events.SearchState;
@@ -13,6 +16,8 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The main search screen: category / status / look-back-days / result-limit
@@ -37,12 +42,19 @@ public class SearchView extends JPanel implements PropertyChangeListener {
     private final SearchController controller;
     private final SearchViewModel viewModel;
 
+    private final GenerateChartController generateChartController;
+    private final ChartViewModel chartViewModel;
+
     private final JComboBox<String> categoryComboBox = new JComboBox<>(CATEGORY_OPTIONS);
     private final JComboBox<String> statusComboBox = new JComboBox<>(STATUS_OPTIONS);
     private final JSpinner daysBackSpinner = new JSpinner(new SpinnerNumberModel(30, 1, 3650, 1));
     private final JSpinner resultLimitSpinner = new JSpinner(new SpinnerNumberModel(50, 1, 500, 1));
     private final JButton searchButton = new JButton("Search");
+
     private final JButton favoriteButton = new JButton("❤️ Add To Favourite");
+
+    private final JButton chartButton = new JButton("View Frequency Chart");
+
     private final JLabel statusLabel = new JLabel(" ");
 
     private final DefaultTableModel tableModel = new DefaultTableModel(
@@ -56,10 +68,15 @@ public class SearchView extends JPanel implements PropertyChangeListener {
 
     private final AddToFavouriteController addToFavouriteController;
 
-    public SearchView(SearchController controller, SearchViewModel viewModel, AddToFavouriteController addToFavouriteController) {
+    public SearchView(SearchController controller, SearchViewModel viewModel,
+                      AddToFavouriteController addToFavouriteController,
+                      GenerateChartController generateChartController,
+                      ChartViewModel chartViewModel) {
         this.controller = controller;
         this.viewModel = viewModel;
         this.addToFavouriteController = addToFavouriteController;
+        this.generateChartController = generateChartController;
+        this.chartViewModel = chartViewModel;
         this.viewModel.addPropertyChangeListener(this);
 
         setLayout(new BorderLayout(8, 8));
@@ -67,13 +84,21 @@ public class SearchView extends JPanel implements PropertyChangeListener {
 
         add(buildFilterPanel(), BorderLayout.NORTH);
         add(new JScrollPane(resultsTable), BorderLayout.CENTER);
-        // changed the bottom panel, put statusLabel and Favourite button together
+        // changed the bottom panel, put statusLabel, chart making and Favourite button together
+
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.add(statusLabel, BorderLayout.WEST);
-        bottomPanel.add(favoriteButton, BorderLayout.EAST); // 收藏按钮放在右下角
+
+        JPanel buttonGroupPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
+        buttonGroupPanel.add(chartButton);
+        buttonGroupPanel.add(favoriteButton); // put the favourite button down right
+
+        bottomPanel.add(buttonGroupPanel, BorderLayout.EAST);
         add(bottomPanel, BorderLayout.SOUTH);
 
         favoriteButton.addActionListener(e -> onAddToFavourite());
+
+        chartButton.addActionListener(e -> onShowChart());
 
         searchButton.addActionListener(event -> onSearch());
 
@@ -98,6 +123,29 @@ public class SearchView extends JPanel implements PropertyChangeListener {
         panel.add(searchButton);
 
         return panel;
+    }
+
+    // function for making chart button
+    private void onShowChart() {
+        SearchState state = viewModel.getState();
+        if (state.getRows() == null || state.getRows().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No search results to generate chart!", "Info", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        List< NaturalEvent> currentEvents = new ArrayList<>();
+        for (EventTableRow row : state.getRows()) {
+            currentEvents.add(row.getRawEvent());
+        }
+
+        // open dialog window
+        ChartView dialog = new ChartView(
+                SwingUtilities.getWindowAncestor(this),
+                currentEvents,
+                generateChartController,
+                chartViewModel
+        );
+        dialog.setVisible(true);
     }
 
     private void onAddToFavourite() {
