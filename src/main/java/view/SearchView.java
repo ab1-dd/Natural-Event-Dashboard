@@ -9,10 +9,16 @@ import interface_adapter.search_events.SearchController;
 import interface_adapter.search_events.SearchState;
 import interface_adapter.search_events.SearchViewModel;
 import interface_adapter.addToFavourite.AddToFavouriteController;
+import interface_adapter.timeSeriesAnalytics.TimeSeriesController;
+import interface_adapter.timeSeriesAnalytics.TimeSeriesViewModel;
+import interface_adapter.viewEventDetail.ViewEventDetailController;
+import interface_adapter.viewEventDetail.EventDetailViewModel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.time.LocalDate;
@@ -45,15 +51,23 @@ public class SearchView extends JPanel implements PropertyChangeListener {
     private final GenerateChartController generateChartController;
     private final ChartViewModel chartViewModel;
 
+    private final TimeSeriesController timeSeriesController;
+    private final TimeSeriesViewModel timeSeriesViewModel;
+
+    private final ViewEventDetailController viewEventDetailController;
+    private final EventDetailViewModel eventDetailViewModel;
+
     private final JComboBox<String> categoryComboBox = new JComboBox<>(CATEGORY_OPTIONS);
     private final JComboBox<String> statusComboBox = new JComboBox<>(STATUS_OPTIONS);
     private final JSpinner daysBackSpinner = new JSpinner(new SpinnerNumberModel(30, 1, 3650, 1));
-    private final JSpinner resultLimitSpinner = new JSpinner(new SpinnerNumberModel(50, 1, 500, 1));
+    private final JSpinner resultLimitSpinner = new JSpinner(new SpinnerNumberModel(50, 1, 5000, 1));
     private final JButton searchButton = new JButton("Search");
 
     private final JButton favoriteButton = new JButton("❤️ Add To Favourite");
 
     private final JButton chartButton = new JButton("View Frequency Chart");
+
+    private final JButton timeSeriesButton = new JButton("Time-Series Analytics");
 
     private final JLabel statusLabel = new JLabel(" ");
 
@@ -71,12 +85,20 @@ public class SearchView extends JPanel implements PropertyChangeListener {
     public SearchView(SearchController controller, SearchViewModel viewModel,
                       AddToFavouriteController addToFavouriteController,
                       GenerateChartController generateChartController,
-                      ChartViewModel chartViewModel) {
+                      ChartViewModel chartViewModel,
+                      TimeSeriesController timeSeriesController,
+                      TimeSeriesViewModel timeSeriesViewModel,
+                      ViewEventDetailController viewEventDetailController,
+                      EventDetailViewModel eventDetailViewModel) {
         this.controller = controller;
         this.viewModel = viewModel;
         this.addToFavouriteController = addToFavouriteController;
         this.generateChartController = generateChartController;
         this.chartViewModel = chartViewModel;
+        this.timeSeriesController = timeSeriesController;
+        this.timeSeriesViewModel = timeSeriesViewModel;
+        this.viewEventDetailController = viewEventDetailController;
+        this.eventDetailViewModel = eventDetailViewModel;
         this.viewModel.addPropertyChangeListener(this);
 
         setLayout(new BorderLayout(8, 8));
@@ -91,6 +113,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
 
         JPanel buttonGroupPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
         buttonGroupPanel.add(chartButton);
+        buttonGroupPanel.add(timeSeriesButton);
         buttonGroupPanel.add(favoriteButton); // put the favourite button down right
 
         bottomPanel.add(buttonGroupPanel, BorderLayout.EAST);
@@ -100,7 +123,19 @@ public class SearchView extends JPanel implements PropertyChangeListener {
 
         chartButton.addActionListener(e -> onShowChart());
 
+        timeSeriesButton.addActionListener(e -> onShowTimeSeries());
+
         searchButton.addActionListener(event -> onSearch());
+
+        // Double-clicking a row opens the event detail view (User Story 2).
+        resultsTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    onShowEventDetail();
+                }
+            }
+        });
 
         render(viewModel.getState());
     }
@@ -144,6 +179,47 @@ public class SearchView extends JPanel implements PropertyChangeListener {
                 currentEvents,
                 generateChartController,
                 chartViewModel
+        );
+        dialog.setVisible(true);
+    }
+
+    // function for opening the time-series analytics dashboard (Sara's user story)
+    private void onShowTimeSeries() {
+        SearchState state = viewModel.getState();
+        if (state.getRows() == null || state.getRows().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No search results to analyze!", "Info", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        List<NaturalEvent> currentEvents = new ArrayList<>();
+        for (EventTableRow row : state.getRows()) {
+            currentEvents.add(row.getRawEvent());
+        }
+
+        TimeSeriesView dialog = new TimeSeriesView(
+                SwingUtilities.getWindowAncestor(this),
+                currentEvents,
+                timeSeriesController,
+                timeSeriesViewModel
+        );
+        dialog.setVisible(true);
+    }
+
+    // function for opening the event detail dialog on a double-clicked row (User Story 2)
+    private void onShowEventDetail() {
+        int selectedRow = resultsTable.getSelectedRow();
+        if (selectedRow == -1) {
+            return;
+        }
+
+        SearchState state = viewModel.getState();
+        EventTableRow selectedEventRow = state.getRows().get(selectedRow);
+
+        EventDetailView dialog = new EventDetailView(
+                SwingUtilities.getWindowAncestor(this),
+                selectedEventRow.getRawEvent(),
+                viewEventDetailController,
+                eventDetailViewModel
         );
         dialog.setVisible(true);
     }

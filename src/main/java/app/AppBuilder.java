@@ -11,6 +11,12 @@ import interface_adapter.search_events.SearchController;
 import interface_adapter.search_events.SearchPresenter;
 import interface_adapter.search_events.SearchViewModel;
 import interface_adapter.addToFavourite.AddToFavouriteController;
+import interface_adapter.timeSeriesAnalytics.TimeSeriesController;
+import interface_adapter.timeSeriesAnalytics.TimeSeriesPresenter;
+import interface_adapter.timeSeriesAnalytics.TimeSeriesViewModel;
+import interface_adapter.viewEventDetail.EventDetailViewModel;
+import interface_adapter.viewEventDetail.ViewEventDetailController;
+import interface_adapter.viewEventDetail.ViewEventDetailPresenter;
 import use_case.addToFavourite.AddToFavouriteInputBoundary;
 import use_case.addToFavourite.AddToFavouriteInteractor;
 import use_case.addToFavourite.AddToFavouriteOutputBoundary;
@@ -21,6 +27,12 @@ import use_case.search_events.EventDataAccessInterface;
 import use_case.search_events.SearchEventsInputBoundary;
 import use_case.search_events.SearchEventsInteractor;
 import use_case.search_events.SearchEventsOutputBoundary;
+import use_case.timeSeriesAnalytics.TimeSeriesAnalyticsInputBoundary;
+import use_case.timeSeriesAnalytics.TimeSeriesAnalyticsInteractor;
+import use_case.timeSeriesAnalytics.TimeSeriesAnalyticsOutputBoundary;
+import use_case.viewEventDetail.ViewEventDetailInputBoundary;
+import use_case.viewEventDetail.ViewEventDetailInteractor;
+import use_case.viewEventDetail.ViewEventDetailOutputBoundary;
 import view.FavouriteView;
 import view.MainFrame;
 import view.SearchView;
@@ -56,8 +68,20 @@ public class AppBuilder {
         GenerateChartInputBoundary chartInteractor = new GenerateChartInteractor(chartPresenter);
         GenerateChartController generateChartController = new GenerateChartController(chartInteractor);
 
+        // for time-series analytics usecase (Sara's user story)
+        TimeSeriesViewModel timeSeriesViewModel = new TimeSeriesViewModel();
+        TimeSeriesAnalyticsOutputBoundary timeSeriesPresenter = new TimeSeriesPresenter(timeSeriesViewModel);
+        TimeSeriesAnalyticsInputBoundary timeSeriesInteractor = new TimeSeriesAnalyticsInteractor(timeSeriesPresenter);
+        TimeSeriesController timeSeriesController = new TimeSeriesController(timeSeriesInteractor);
+
+        // for event detail view usecase (Daniel's user story)
+        EventDetailViewModel eventDetailViewModel = new EventDetailViewModel();
+        ViewEventDetailOutputBoundary eventDetailPresenter = new ViewEventDetailPresenter(eventDetailViewModel);
+        ViewEventDetailInputBoundary eventDetailInteractor = new ViewEventDetailInteractor(eventDetailPresenter);
+        ViewEventDetailController viewEventDetailController = new ViewEventDetailController(eventDetailInteractor);
+
         SearchView searchView = new SearchView(searchController, searchViewModel, addToFavouriteController, generateChartController,
-                chartViewModel);
+                chartViewModel, timeSeriesController, timeSeriesViewModel, viewEventDetailController, eventDetailViewModel);
         FavouriteView favouriteView = new FavouriteView(favouriteList);
 
         return new MainFrame(searchView, favouriteView);
