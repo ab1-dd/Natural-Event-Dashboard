@@ -32,19 +32,17 @@ public class ChartView extends JDialog implements PropertyChangeListener {
         setLocationRelativeTo(owner);
         setLayout(new BorderLayout(8, 8));
 
-        // 1. 顶部控制栏
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 8));
         topPanel.add(new JLabel("Days per Unit (X-Axis):"));
         topPanel.add(unitSpinner);
         add(topPanel, BorderLayout.NORTH);
 
-        // 2. 中间画图画布
         add(canvasPanel, BorderLayout.CENTER);
 
-        // 3. 监听 Spinner 变化，调用 Controller 重新计算数据
+        // call controller
         unitSpinner.addChangeListener(e -> triggerChartGeneration());
 
-        // 初始计算一次
+
         triggerChartGeneration();
     }
 
@@ -61,7 +59,6 @@ public class ChartView extends JDialog implements PropertyChangeListener {
         }
     }
 
-    // 自定义绘图画布
     private class ChartCanvasPanel extends JPanel {
 
         @Override
@@ -104,10 +101,10 @@ public class ChartView extends JDialog implements PropertyChangeListener {
             g2.drawLine(x0, y0, x0 + chartWidth, y0);
             g2.drawLine(x0, y0, x0, y0 - chartHeight);
 
-            // 轴标题
+            // labels
             g2.drawString("Frequency (Count)", 10, y0 - chartHeight - 10);
 
-            // 绘制柱状图
+            // making bar graph
             int barWidth = Math.max(1, chartWidth / numBins - 6);
 
             for (int i = 0; i < numBins; i++) {
@@ -115,18 +112,18 @@ public class ChartView extends JDialog implements PropertyChangeListener {
                 int x = x0 + i * (chartWidth / numBins) + 3;
                 int y = y0 - barHeight;
 
-                // 填充柱体 (淡蓝色)
+                // color filling
                 g2.setColor(new Color(70, 130, 180));
                 g2.fillRect(x, y, barWidth, barHeight);
                 g2.setColor(Color.DARK_GRAY);
                 g2.drawRect(x, y, barWidth, barHeight);
 
-                // 柱子上方数值
+                // data above bars
                 if (counts[i] > 0) {
                     g2.drawString(String.valueOf(counts[i]), x + barWidth / 2 - 4, y - 4);
                 }
 
-                // X 轴时间标签（防重叠过滤）
+                // x axis label
                 if (numBins < 12 || i % (numBins / 6 + 1) == 0) {
                     g2.drawString(labels.get(i), x, y0 + 15);
                 }

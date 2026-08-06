@@ -9,13 +9,13 @@ import java.util.List;
  * the location could be two types: Point or Polygon
  */
 public class NaturalEvent {
-    private String eventId;
-    private String title;
-    private String eventDate;
-    private String categoryID;
-    private String sourceLinks;
-    private boolean isClosed;
-    private List<EventLocation> eventLocation;
+    private final String eventId;
+    private final String title;
+    private final String eventDate;
+    private final String categoryID;
+    private final String sourceLinks;
+    private final boolean isClosed;
+    private final List<EventLocation> eventLocation;
 
     public NaturalEvent(String eventId, String title, String eventDate, String categoryID, String sourceLinks, boolean isClosed, List<EventLocation> eventLocation){
         this.eventId = eventId;

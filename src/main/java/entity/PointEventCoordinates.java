@@ -5,7 +5,10 @@ package entity;
  * basically a point coordinate with a date
  */
 public class PointEventCoordinates implements EventCoordinates {
+
     private final PointCoordinates pointCoordinates;
+
+
     private final String date;
 
 
