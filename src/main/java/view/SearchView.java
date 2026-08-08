@@ -28,7 +28,6 @@ import java.util.List;
 /**
  * The main search screen: category / status / look-back-days / result-limit
  * filters on top, and a results table underneath.
- *
  * This satisfies the central user story: "Maya opens the app, selects all
  * categories, chooses active events from the last 30 days, and sees matching
  * natural events in a table."
@@ -59,8 +58,8 @@ public class SearchView extends JPanel implements PropertyChangeListener {
 
     private final JComboBox<String> categoryComboBox = new JComboBox<>(CATEGORY_OPTIONS);
     private final JComboBox<String> statusComboBox = new JComboBox<>(STATUS_OPTIONS);
-    private final JSpinner daysBackSpinner = new JSpinner(new SpinnerNumberModel(30, 1, 3650, 1));
-    private final JSpinner resultLimitSpinner = new JSpinner(new SpinnerNumberModel(50, 1, 5000, 1));
+    private final JSpinner daysBackSpinner = new JSpinner(new SpinnerNumberModel(90, 1, 3650, 1));
+    private final JSpinner resultLimitSpinner = new JSpinner(new SpinnerNumberModel(150, 1, 5000, 1));
     private final JButton searchButton = new JButton("Search");
 
     private final JButton favoriteButton = new JButton("❤️ Add To Favourite");
@@ -168,9 +167,9 @@ public class SearchView extends JPanel implements PropertyChangeListener {
             return;
         }
 
-        List< NaturalEvent> currentEvents = new ArrayList<>();
+        List<NaturalEvent> currentEvents = new ArrayList<>();
         for (EventTableRow row : state.getRows()) {
-            currentEvents.add(row.getRawEvent());
+            currentEvents.add(state.getEvent(row.getEventId()));
         }
 
         // open dialog window
@@ -193,7 +192,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
 
         List<NaturalEvent> currentEvents = new ArrayList<>();
         for (EventTableRow row : state.getRows()) {
-            currentEvents.add(row.getRawEvent());
+            currentEvents.add(state.getEvent(row.getEventId()));
         }
 
         TimeSeriesView dialog = new TimeSeriesView(
@@ -217,7 +216,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
 
         EventDetailView dialog = new EventDetailView(
                 SwingUtilities.getWindowAncestor(this),
-                selectedEventRow.getRawEvent(),
+                state.getEvent(selectedEventRow.getEventId()),
                 viewEventDetailController,
                 eventDetailViewModel
         );
@@ -239,7 +238,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
         EventTableRow selectedEventRow = state.getRows().get(selectedRow);
 
         // Calling AddToFavouriteController
-        addToFavouriteController.execute(selectedEventRow.getRawEvent());
+        addToFavouriteController.execute(state.getEvent(selectedEventRow.getEventId()));
     }
 
     private void onSearch() {

@@ -6,7 +6,9 @@ import use_case.search_events.SearchEventsOutputBoundary;
 import use_case.search_events.SearchEventsOutputData;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Converts use case output into a SearchState the view can render, and
@@ -23,15 +25,17 @@ public class SearchPresenter implements SearchEventsOutputBoundary {
     @Override
     public void prepareSuccessView(SearchEventsOutputData outputData) {
         List<EventTableRow> rows = new ArrayList<>();
+        Map<String, NaturalEvent> eventsById = new LinkedHashMap<>();
         for (NaturalEvent event : outputData.getEvents()) {
             rows.add(toRow(event));
+            eventsById.put(event.getEventId(), event);
         }
-        viewModel.setState(new SearchState(rows, null));
+        viewModel.setState(new SearchState(rows, eventsById, null));
     }
 
     @Override
     public void prepareFailView(String errorMessage) {
-        viewModel.setState(new SearchState(List.of(), errorMessage));
+        viewModel.setState(new SearchState(List.of(), Map.of(), errorMessage));
     }
 
     private EventTableRow toRow(NaturalEvent event) {
@@ -43,7 +47,6 @@ public class SearchPresenter implements SearchEventsOutputBoundary {
         }
 
         return new EventTableRow(
-                event,
                 event.getEventId(),
                 event.getTitle(),
                 event.hasCategory() ? event.getCategoryID() : "Uncategorized",
