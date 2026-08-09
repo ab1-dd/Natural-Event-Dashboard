@@ -1,23 +1,20 @@
 package interface_adapter.addToFavourite;
 
 import use_case.addToFavourite.AddToFavouriteOutputBoundary;
-import javax.swing.JOptionPane;
+import use_case.addToFavourite.AddToFavouriteOutputData;
+
 
 public class AddToFavouritePresenter implements AddToFavouriteOutputBoundary {
+    private AddToFavouriteViewModel viewModel;
 
-    @Override
-    public void prepareSuccessView(String eventTitle) {
-        JOptionPane.showMessageDialog(null,
-                "Successfully added 【" + eventTitle + "】 to favourites!",
-                "Success",
-                JOptionPane.INFORMATION_MESSAGE);
+    public void present(AddToFavouriteOutputData outputData){
+        if (outputData.isSuccess()){
+            viewModel = new AddToFavouriteViewModel("Successfully added to favourites!");
+        }else {
+            viewModel = new AddToFavouriteViewModel("Failed added to favourites because duplication!");
+        }
     }
-
-    @Override
-    public void prepareFailView(String eventTitle, String errorMessage) {
-        JOptionPane.showMessageDialog(null,
-                errorMessage,
-                "Duplicate Event",
-                JOptionPane.WARNING_MESSAGE);
+    public AddToFavouriteViewModel getViewModel() {
+        return viewModel;
     }
 }

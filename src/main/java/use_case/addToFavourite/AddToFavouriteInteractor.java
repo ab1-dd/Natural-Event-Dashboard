@@ -13,12 +13,17 @@ public class AddToFavouriteInteractor implements AddToFavouriteInputBoundary {
     }
 
     @Override
-    public void addFavourite(NaturalEvent naturalEvent) {
-        boolean isAdded = favouriteList.addNaturalEvent(naturalEvent);
-        if (isAdded) {
-            presenter.prepareSuccessView(naturalEvent.getTitle());
+    public void execute(AddToFavouriteInputData inputData) {
+        String eventID = inputData.getEventId();
+        boolean duplicated = favouriteList.contain(eventID);
+        if (duplicated) {
+            AddToFavouriteOutputData outputData= new AddToFavouriteOutputData(false);
+            presenter.present(outputData);
         }else{
-            presenter.prepareFailView(naturalEvent.getTitle(), "This event is ALREADY in your favourite list!");
+            favouriteList.addNaturalEvent(eventID);
+            AddToFavouriteOutputData outputData= new AddToFavouriteOutputData(true);
+            presenter.present(outputData);
+
         }
     }
 }
