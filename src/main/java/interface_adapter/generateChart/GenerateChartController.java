@@ -6,6 +6,7 @@ import use_case.generateChart.GenerateChartInputBoundary;
 import use_case.generateChart.GenerateChartInputData;
 
 import java.util.List;
+import java.util.Map;
 
 public class GenerateChartController {
 
@@ -15,8 +16,8 @@ public class GenerateChartController {
         this.interactor = interactor;
     }
 
-    public void generateChart(List<NaturalEvent> events, int daysPerUnit) {
-        GenerateChartInputData inputData = new GenerateChartInputData(events, daysPerUnit);
+    public void generateChart(Map<String, String> eventMap, int daysPerUnit) {
+        GenerateChartInputData inputData = new GenerateChartInputData(eventMap, daysPerUnit);
         interactor.execute(inputData);
     }
 }

@@ -24,7 +24,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The main search screen: category / status / look-back-days / result-limit
@@ -176,9 +178,9 @@ public class SearchView extends JPanel implements PropertyChangeListener {
             return;
         }
 
-        List< NaturalEvent> currentEvents = new ArrayList<>();
+        Map<String, String> currentEvents = new HashMap<>();
         for (EventTableRow row : state.getRows()) {
-            currentEvents.add(row.getRawEvent());
+            currentEvents.put(row.getEventId(), row.getEventDate());
         }
 
         // open dialog window

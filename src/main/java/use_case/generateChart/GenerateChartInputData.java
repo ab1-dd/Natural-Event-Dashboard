@@ -1,19 +1,18 @@
 package use_case.generateChart;
 
-import entity.NaturalEvent;
-import java.util.List;
+import java.util.Map;
 
 public class GenerateChartInputData {
-    private final List<NaturalEvent> events;
+    private final Map<String, String> eventMap ;
     private final int daysPerUnit;
 
-    public GenerateChartInputData(List<NaturalEvent> events, int daysPerUnit) {
-        this.events = events;
+    public GenerateChartInputData(Map<String, String> eventMap, int daysPerUnit) {
+        this.eventMap = eventMap;
         this.daysPerUnit = daysPerUnit;
     }
 
-    public List<NaturalEvent> getEvents() {
-        return events;
+    public Map<String, String> getEventMap() {
+        return eventMap;
     }
 
     public int getDaysPerUnit() {

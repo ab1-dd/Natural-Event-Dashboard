@@ -1,6 +1,5 @@
 package view;
 
-import entity.NaturalEvent;
 import interface_adapter.generateChart.ChartState;
 import interface_adapter.generateChart.ChartViewModel;
 import interface_adapter.generateChart.GenerateChartController;
@@ -10,19 +9,19 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
+import java.util.Map;
 
 public class ChartView extends JDialog implements PropertyChangeListener {
-
-    private final List<NaturalEvent> events;
+    private final Map<String, String> eventMap;
     private final GenerateChartController controller;
     private final ChartViewModel viewModel;
 
     private final JSpinner unitSpinner = new JSpinner(new SpinnerNumberModel(5, 1, 30, 1)); // default: 5days as 1 unit
     private final ChartCanvasPanel canvasPanel = new ChartCanvasPanel();
 
-    public ChartView(Window owner, List<NaturalEvent> events, GenerateChartController controller, ChartViewModel viewModel) {
+    public ChartView(Window owner,Map<String, String> eventMap, GenerateChartController controller, ChartViewModel viewModel) {
         super(owner, "Event Frequency Histogram", ModalityType.MODELESS);
-        this.events = events;
+        this.eventMap = eventMap;
         this.controller = controller;
         this.viewModel = viewModel;
 
@@ -49,7 +48,7 @@ public class ChartView extends JDialog implements PropertyChangeListener {
 
     private void triggerChartGeneration() {
         int daysPerUnit = (Integer) unitSpinner.getValue();
-        controller.generateChart(events, daysPerUnit);
+        controller.generateChart(eventMap, daysPerUnit);
     }
 
     @Override
