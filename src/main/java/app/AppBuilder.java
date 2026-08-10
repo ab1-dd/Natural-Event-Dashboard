@@ -2,7 +2,6 @@ package app;
 
 import data_access.EonetEventDataAccessObject;
 import entity.FavouriteList;
-import entity.NaturalEvent;
 import interface_adapter.GetFavourite.GetFavouriteController;
 import interface_adapter.GetFavourite.GetFavouritePresenter;
 import interface_adapter.GetFavourite.GetFavouriteViewModel;
@@ -44,9 +43,6 @@ import view.FavouriteView;
 import view.MainFrame;
 import view.SearchView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Wires up every layer (data access -> use case -> interface adapters ->
  * view) into a runnable MainFrame. This is the only class that is allowed to
@@ -63,7 +59,6 @@ public class AppBuilder {
         SearchController searchController = new SearchController(searchInteractor);
 
         // for favourite usecase
-        List<String> emptyList = new ArrayList<>();
         AddToFavouriteViewModel addToFavouriteViewModel = new AddToFavouriteViewModel();
         FavouriteList favouriteList = new FavouriteList(); // create instance of favourite list
         AddToFavouriteOutputBoundary addToFavouritePresenter = new AddToFavouritePresenter(addToFavouriteViewModel);
@@ -75,7 +70,6 @@ public class AppBuilder {
         GetFavouriteOutputBoundary getFavouritePresenter = new GetFavouritePresenter(getFavouriteViewModel);
         GetFavouriteInputBoundary getFavouriteInputBoundary = new GetFavouriteInteractor(favouriteList, getFavouritePresenter);
         GetFavouriteController getFavouriteController = new GetFavouriteController(getFavouriteInputBoundary);
-        GetFavouriteViewModel getFavouriteViewModel1 = new GetFavouriteViewModel();
 
         // for frequency chart usecase
         ChartViewModel chartViewModel = new ChartViewModel();

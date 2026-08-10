@@ -11,4 +11,10 @@ import java.util.List;
  */
 public interface EventDataAccessInterface {
     List<NaturalEvent> fetchEvents(EventFilter filter) throws EventFetchException;
+
+    /**
+     * @param eventId an EONET event id (e.g. "EONET_21965")
+     * @return the single event matching that id
+     */
+    NaturalEvent fetchEventById(String eventId) throws EventFetchException;
 }

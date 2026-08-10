@@ -1,5 +1,6 @@
 package data_access;
 
+import data_access.json.JsonObject;
 import entity.EventFilter;
 import entity.NaturalEvent;
 import use_case.search_events.EventDataAccessInterface;
@@ -38,7 +39,21 @@ public class EonetEventDataAccessObject implements EventDataAccessInterface {
     @Override
     public List<NaturalEvent> fetchEvents(EventFilter filter) throws EventFetchException {
         URI requestUri = buildRequestUri(filter);
+        return EonetEventMapper.mapEventsResponse(get(requestUri));
+    }
 
+    @Override
+    public NaturalEvent fetchEventById(String eventId) throws EventFetchException {
+        URI requestUri = URI.create(EVENTS_URL + "/" + encode(eventId));
+        return EonetEventMapper.mapEvent(new JsonObject(get(requestUri)));
+    }
+
+    /**
+     * Sends a GET request to the given URI and returns the raw response body,
+     * shared by both fetchEvents and fetchEventById so the HTTP/error-handling
+     * logic only lives in one place.
+     */
+    private String get(URI requestUri) throws EventFetchException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(requestUri)
                 .GET()
@@ -52,7 +67,7 @@ public class EonetEventDataAccessObject implements EventDataAccessInterface {
                         "EONET returned HTTP " + response.statusCode() + " for " + requestUri);
             }
 
-            return EonetEventMapper.mapEventsResponse(response.body());
+            return response.body();
         } catch (IOException | InterruptedException exception) {
             if (exception instanceof InterruptedException) {
                 Thread.currentThread().interrupt();

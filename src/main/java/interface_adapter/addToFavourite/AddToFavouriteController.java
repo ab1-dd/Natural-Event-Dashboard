@@ -1,6 +1,5 @@
 package interface_adapter.addToFavourite;
 
-import entity.NaturalEvent;
 import use_case.addToFavourite.AddToFavouriteInputBoundary;
 import use_case.addToFavourite.AddToFavouriteInputData;
 

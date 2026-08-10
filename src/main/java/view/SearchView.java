@@ -65,8 +65,8 @@ public class SearchView extends JPanel implements PropertyChangeListener {
 
     private final JComboBox<String> categoryComboBox = new JComboBox<>(CATEGORY_OPTIONS);
     private final JComboBox<String> statusComboBox = new JComboBox<>(STATUS_OPTIONS);
-    private final JSpinner daysBackSpinner = new JSpinner(new SpinnerNumberModel(30, 1, 3650, 1));
-    private final JSpinner resultLimitSpinner = new JSpinner(new SpinnerNumberModel(50, 1, 5000, 1));
+    private final JSpinner daysBackSpinner = new JSpinner(new SpinnerNumberModel(90, 1, 3650, 1));
+    private final JSpinner resultLimitSpinner = new JSpinner(new SpinnerNumberModel(150, 1, 5000, 1));
     private final JButton searchButton = new JButton("Search");
 
     // button for add to favourite
@@ -203,7 +203,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
 
         List<NaturalEvent> currentEvents = new ArrayList<>();
         for (EventTableRow row : state.getRows()) {
-            currentEvents.add(row.getRawEvent());
+            currentEvents.add(state.getEvent(row.getEventId()));
         }
 
         TimeSeriesView dialog = new TimeSeriesView(
@@ -227,7 +227,7 @@ public class SearchView extends JPanel implements PropertyChangeListener {
 
         EventDetailView dialog = new EventDetailView(
                 SwingUtilities.getWindowAncestor(this),
-                selectedEventRow.getRawEvent(),
+                state.getEvent(selectedEventRow.getEventId()),
                 viewEventDetailController,
                 eventDetailViewModel
         );
