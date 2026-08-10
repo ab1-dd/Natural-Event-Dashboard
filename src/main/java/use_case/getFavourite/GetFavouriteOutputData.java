@@ -3,13 +3,13 @@ package use_case.getFavourite;
 import java.util.List;
 
 public class GetFavouriteOutputData {
-    private final List<String> favouriteEventIds;
+    private final List<List<String> > favouriteEventInfo;
 
-    public GetFavouriteOutputData(List<String> favouriteEventIds) {
-        this.favouriteEventIds = favouriteEventIds;
+    public GetFavouriteOutputData(List<List<String> > favouriteEventInfo) {
+        this.favouriteEventInfo = favouriteEventInfo;
     }
 
-    public List<String> getFavouriteEventIds() {
-        return favouriteEventIds;
+    public List<List<String> > getFavouriteEventInfo() {
+        return favouriteEventInfo;
     }
 }

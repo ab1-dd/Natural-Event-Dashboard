@@ -5,6 +5,7 @@ import interface_adapter.GetFavourite.GetFavouriteViewModel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class FavouriteView extends JPanel {
     private final GetFavouriteController controller;
@@ -56,10 +57,10 @@ public class FavouriteView extends JPanel {
 
         listModel.clear();
 
-        for (String eventId :
-                viewModel.getFavouriteEventIds()) {
+        for (List<String> eventInfo :
+                viewModel.getFavouriteEventInfoList()) {
 
-            listModel.addElement(eventId);
+            listModel.addElement(eventInfo.get(0) + ", " + eventInfo.get(1) + ", " + eventInfo.get(2));
         }
     }
 }

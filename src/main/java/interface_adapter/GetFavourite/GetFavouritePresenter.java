@@ -15,8 +15,8 @@ public class GetFavouritePresenter implements GetFavouriteOutputBoundary {
     @Override
     public void present(GetFavouriteOutputData outputData) {
 
-        viewModel.setFavouriteEventIds(
-                outputData.getFavouriteEventIds()
+        viewModel.setFavouriteEventInfoList(
+                outputData.getFavouriteEventInfo()
         );
     }
 

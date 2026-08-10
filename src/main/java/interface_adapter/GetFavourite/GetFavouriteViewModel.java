@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GetFavouriteViewModel {
-    private List<String> favouriteEventIds;
+    private List<List<String>> favouriteEventInfoList;
 
     public GetFavouriteViewModel() {
-        this.favouriteEventIds = new ArrayList<>();
+        this.favouriteEventInfoList = new ArrayList<>();
     }
 
-    public List<String> getFavouriteEventIds() {
-        return favouriteEventIds;
+    public List<List<String>> getFavouriteEventInfoList() {
+        return favouriteEventInfoList;
     }
 
-    public void setFavouriteEventIds(List<String> favouriteEventIds) {
-        this.favouriteEventIds = favouriteEventIds;
+    public void setFavouriteEventInfoList(List<List<String>> favouriteEventInfoList) {
+        this.favouriteEventInfoList = favouriteEventInfoList;
     }
 }
