@@ -68,7 +68,7 @@ public class AppBuilder {
         // for favourite tab
         GetFavouriteViewModel getFavouriteViewModel = new GetFavouriteViewModel();
         GetFavouriteOutputBoundary getFavouritePresenter = new GetFavouritePresenter(getFavouriteViewModel);
-        GetFavouriteInputBoundary getFavouriteInputBoundary = new GetFavouriteInteractor(favouriteList, getFavouritePresenter);
+        GetFavouriteInputBoundary getFavouriteInputBoundary = new GetFavouriteInteractor(favouriteList, getFavouritePresenter, eventDataAccess);
         GetFavouriteController getFavouriteController = new GetFavouriteController(getFavouriteInputBoundary);
 
         // for frequency chart usecase
