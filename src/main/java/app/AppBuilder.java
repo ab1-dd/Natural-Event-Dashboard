@@ -3,7 +3,11 @@ package app;
 import data_access.EonetEventDataAccessObject;
 import entity.FavouriteList;
 import entity.NaturalEvent;
+import interface_adapter.GetFavourite.GetFavouriteController;
+import interface_adapter.GetFavourite.GetFavouritePresenter;
+import interface_adapter.GetFavourite.GetFavouriteViewModel;
 import interface_adapter.addToFavourite.AddToFavouritePresenter;
+import interface_adapter.addToFavourite.AddToFavouriteViewModel;
 import interface_adapter.generateChart.ChartViewModel;
 import interface_adapter.generateChart.GenerateChartController;
 import interface_adapter.generateChart.GenerateChartPresenter;
@@ -17,6 +21,9 @@ import interface_adapter.timeSeriesAnalytics.TimeSeriesViewModel;
 import interface_adapter.viewEventDetail.EventDetailViewModel;
 import interface_adapter.viewEventDetail.ViewEventDetailController;
 import interface_adapter.viewEventDetail.ViewEventDetailPresenter;
+import use_case.GetFavourite.GetFavouriteInputBoundary;
+import use_case.GetFavourite.GetFavouriteInteractor;
+import use_case.GetFavourite.GetFavouriteOutputBoundary;
 import use_case.addToFavourite.AddToFavouriteInputBoundary;
 import use_case.addToFavourite.AddToFavouriteInteractor;
 import use_case.addToFavourite.AddToFavouriteOutputBoundary;
@@ -56,11 +63,19 @@ public class AppBuilder {
         SearchController searchController = new SearchController(searchInteractor);
 
         // for favourite usecase
-        List<NaturalEvent> emptyList = new ArrayList<>();
-        FavouriteList favouriteList = new FavouriteList(emptyList); // create instance of favourite list
-        AddToFavouriteOutputBoundary addToFavouritePresenter = new AddToFavouritePresenter();
+        List<String> emptyList = new ArrayList<>();
+        AddToFavouriteViewModel addToFavouriteViewModel = new AddToFavouriteViewModel();
+        FavouriteList favouriteList = new FavouriteList(); // create instance of favourite list
+        AddToFavouriteOutputBoundary addToFavouritePresenter = new AddToFavouritePresenter(addToFavouriteViewModel);
         AddToFavouriteInputBoundary addToFavouriteInteractor = new AddToFavouriteInteractor(favouriteList, addToFavouritePresenter);
         AddToFavouriteController addToFavouriteController = new AddToFavouriteController(addToFavouriteInteractor);
+
+        // for favourite tab
+        GetFavouriteViewModel getFavouriteViewModel = new GetFavouriteViewModel();
+        GetFavouriteOutputBoundary getFavouritePresenter = new GetFavouritePresenter(getFavouriteViewModel);
+        GetFavouriteInputBoundary getFavouriteInputBoundary = new GetFavouriteInteractor(favouriteList, getFavouritePresenter);
+        GetFavouriteController getFavouriteController = new GetFavouriteController(getFavouriteInputBoundary);
+        GetFavouriteViewModel getFavouriteViewModel1 = new GetFavouriteViewModel();
 
         // for frequency chart usecase
         ChartViewModel chartViewModel = new ChartViewModel();
@@ -80,9 +95,9 @@ public class AppBuilder {
         ViewEventDetailInputBoundary eventDetailInteractor = new ViewEventDetailInteractor(eventDetailPresenter);
         ViewEventDetailController viewEventDetailController = new ViewEventDetailController(eventDetailInteractor);
 
-        SearchView searchView = new SearchView(searchController, searchViewModel, addToFavouriteController, generateChartController,
+        SearchView searchView = new SearchView(searchController, searchViewModel, addToFavouriteController, addToFavouriteViewModel, generateChartController,
                 chartViewModel, timeSeriesController, timeSeriesViewModel, viewEventDetailController, eventDetailViewModel);
-        FavouriteView favouriteView = new FavouriteView(favouriteList);
+        FavouriteView favouriteView = new FavouriteView(getFavouriteController, getFavouriteViewModel);
 
         return new MainFrame(searchView, favouriteView);
     }

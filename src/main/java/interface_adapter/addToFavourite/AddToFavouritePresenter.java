@@ -7,11 +7,15 @@ import use_case.addToFavourite.AddToFavouriteOutputData;
 public class AddToFavouritePresenter implements AddToFavouriteOutputBoundary {
     private AddToFavouriteViewModel viewModel;
 
+    public AddToFavouritePresenter(AddToFavouriteViewModel viewModel){
+        this.viewModel = viewModel;
+    }
+
     public void present(AddToFavouriteOutputData outputData){
         if (outputData.isSuccess()){
-            viewModel = new AddToFavouriteViewModel("Successfully added to favourites!");
+            this.viewModel.setMessage("Successfully added to favourites!");
         }else {
-            viewModel = new AddToFavouriteViewModel("Failed added to favourites because duplication!");
+            this.viewModel.setMessage("Failed added to favourites because duplication!");
         }
     }
     public AddToFavouriteViewModel getViewModel() {

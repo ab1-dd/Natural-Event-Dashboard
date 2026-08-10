@@ -1,25 +1,22 @@
 package entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * This class represent a Favourite list that we can add Natural event in the list
  */
 public class FavouriteList {
-    private List<String> naturalEventIDList;
+    private List<String> naturalEventIDList = new ArrayList<>();
 
-    public FavouriteList(List<String> naturalEventIDListntList) {
-        this.naturalEventIDList = naturalEventIDList;
+    public FavouriteList() {
+        this.naturalEventIDList = new ArrayList<>();
     }
 
     public List<String> getNaturalEventList() {
         return naturalEventIDList;
     }
 
-    /**
-     * @param naturalEventID a natural event's ID.
-     * @return a boolean type, false if naturalEvent already exist in favourite list, return true otherwise.
-     */
     public void addNaturalEvent(String naturalEventID){
         naturalEventIDList.add(naturalEventID);
     }
