@@ -1,11 +1,10 @@
 package use_case.generateChart;
 
-import entity.NaturalEvent;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.Map;
 
 public class GenerateChartInteractor implements GenerateChartInputBoundary {
 
@@ -17,10 +16,10 @@ public class GenerateChartInteractor implements GenerateChartInputBoundary {
 
     @Override
     public void execute(GenerateChartInputData inputData) {
-        List<NaturalEvent> events = inputData.getEvents();
+        Map<String, String> eventMap = inputData.getEventMap();
         int daysPerUnit = inputData.getDaysPerUnit();
 
-        if (events == null || events.isEmpty()) {
+        if (eventMap == null || eventMap.isEmpty()) {
             presenter.prepareFailView("No event data available to plot chart.");
             return;
         }
@@ -32,14 +31,14 @@ public class GenerateChartInteractor implements GenerateChartInputBoundary {
 
         // Convert the raw date data (String) to local date
         List<LocalDate> dates = new ArrayList<>();
-        for (NaturalEvent event : events) {
+        eventMap.forEach((eventID, rawDate) -> {
             try {
-                String rawDate = event.getEventDate();
+
                 if (rawDate != null && rawDate.length() >= 10) {
                     dates.add(LocalDate.parse(rawDate.substring(0, 10)));
                 }
             } catch (Exception ignoreIt) {} // well, even there is an exception, just ignore it
-        }
+        });
 
         if (dates.isEmpty()) {
             presenter.prepareFailView("Failed to parse valid dates from events.");
