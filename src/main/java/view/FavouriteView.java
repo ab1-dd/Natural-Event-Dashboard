@@ -60,7 +60,7 @@ public class FavouriteView extends JPanel {
         for (List<String> eventInfo :
                 viewModel.getFavouriteEventInfoList()) {
 
-            listModel.addElement(eventInfo.get(0) + ", " + eventInfo.get(1) + ", " + eventInfo.get(2));
+            listModel.addElement(eventInfo.get(0) + "; " + eventInfo.get(1) + "; " + eventInfo.get(2));
         }
     }
 }
