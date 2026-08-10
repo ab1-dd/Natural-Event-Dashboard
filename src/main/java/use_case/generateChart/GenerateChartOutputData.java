@@ -3,9 +3,9 @@ package use_case.generateChart;
 import java.util.List;
 
 public class GenerateChartOutputData {
-    private final List<String> binLabels; // X 轴显示的日期区间标签 (如 "08-01 ~ 08-05")
-    private final int[] counts;          // Y 轴对应的频次数组
-    private final int maxCount;          // 最大频次 (方便 View 计算柱状图高度)
+    private final List<String> binLabels; // X axis label
+    private final int[] counts;          // Y axis frequency
+    private final int maxCount;          // max frequency
     private final boolean useCaseFailed;
 
     public GenerateChartOutputData(List<String> binLabels, int[] counts, int maxCount, boolean useCaseFailed) {

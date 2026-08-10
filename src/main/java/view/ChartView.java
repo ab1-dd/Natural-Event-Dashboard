@@ -17,7 +17,7 @@ public class ChartView extends JDialog implements PropertyChangeListener {
     private final GenerateChartController controller;
     private final ChartViewModel viewModel;
 
-    private final JSpinner unitSpinner = new JSpinner(new SpinnerNumberModel(5, 1, 30, 1)); // 默认每 5 天为 1 单位
+    private final JSpinner unitSpinner = new JSpinner(new SpinnerNumberModel(5, 1, 30, 1)); // default: 5days as 1 unit
     private final ChartCanvasPanel canvasPanel = new ChartCanvasPanel();
 
     public ChartView(Window owner, List<NaturalEvent> events, GenerateChartController controller, ChartViewModel viewModel) {
@@ -32,19 +32,18 @@ public class ChartView extends JDialog implements PropertyChangeListener {
         setLocationRelativeTo(owner);
         setLayout(new BorderLayout(8, 8));
 
-        // 1. 顶部控制栏
+        // top input place
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 8));
         topPanel.add(new JLabel("Days per Unit (X-Axis):"));
         topPanel.add(unitSpinner);
         add(topPanel, BorderLayout.NORTH);
 
-        // 2. 中间画图画布
+        // middle panel
         add(canvasPanel, BorderLayout.CENTER);
 
-        // 3. 监听 Spinner 变化，调用 Controller 重新计算数据
         unitSpinner.addChangeListener(e -> triggerChartGeneration());
 
-        // 初始计算一次
+        // first time calculate
         triggerChartGeneration();
     }
 
@@ -56,12 +55,11 @@ public class ChartView extends JDialog implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (ChartViewModel.STATE_PROPERTY.equals(evt.getPropertyName())) {
-            // ViewModel 状态更新时重绘画布
+            // ViewModel repaint when update
             canvasPanel.repaint();
         }
     }
 
-    // 自定义绘图画布
     private class ChartCanvasPanel extends JPanel {
 
         @Override
@@ -99,15 +97,15 @@ public class ChartView extends JDialog implements PropertyChangeListener {
             int chartWidth = width - x0 - padding;
             int chartHeight = y0 - padding;
 
-            // 绘制 X 轴与 Y 轴
+            // draw x, y axis
             g2.setColor(Color.BLACK);
             g2.drawLine(x0, y0, x0 + chartWidth, y0);
             g2.drawLine(x0, y0, x0, y0 - chartHeight);
 
-            // 轴标题
+            // axis label
             g2.drawString("Frequency (Count)", 10, y0 - chartHeight - 10);
 
-            // 绘制柱状图
+            // draw bar graph
             int barWidth = Math.max(1, chartWidth / numBins - 6);
 
             for (int i = 0; i < numBins; i++) {
@@ -115,18 +113,18 @@ public class ChartView extends JDialog implements PropertyChangeListener {
                 int x = x0 + i * (chartWidth / numBins) + 3;
                 int y = y0 - barHeight;
 
-                // 填充柱体 (淡蓝色)
+                // fill bar with blue
                 g2.setColor(new Color(70, 130, 180));
                 g2.fillRect(x, y, barWidth, barHeight);
                 g2.setColor(Color.DARK_GRAY);
                 g2.drawRect(x, y, barWidth, barHeight);
 
-                // 柱子上方数值
+                // value above bars
                 if (counts[i] > 0) {
                     g2.drawString(String.valueOf(counts[i]), x + barWidth / 2 - 4, y - 4);
                 }
 
-                // X 轴时间标签（防重叠过滤）
+                // X-axis label
                 if (numBins < 12 || i % (numBins / 6 + 1) == 0) {
                     g2.drawString(labels.get(i), x, y0 + 15);
                 }
