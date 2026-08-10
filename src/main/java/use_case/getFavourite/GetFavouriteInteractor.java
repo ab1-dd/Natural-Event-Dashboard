@@ -1,4 +1,4 @@
-package use_case.GetFavourite;
+package use_case.getFavourite;
 
 import entity.FavouriteList;
 

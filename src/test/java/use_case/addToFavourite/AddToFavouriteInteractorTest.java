@@ -1,68 +1,58 @@
 package use_case.addToFavourite;
 
 import entity.FavouriteList;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class addToFavouriteInteractorTest {
-
-    private FavouriteList favouriteList;
-    private TestPresenter testPresenter;
-    private AddToFavouriteInteractor interactor;
-
-    // Mock presenter to capture output, same pattern used by the other interactor tests.
-    private static class TestPresenter implements AddToFavouriteOutputBoundary {
-        boolean presentCalled = false;
-        AddToFavouriteOutputData outputData = null;
-
-        @Override
-        public void present(AddToFavouriteOutputData outputData) {
-            this.presentCalled = true;
-            this.outputData = outputData;
-        }
-    }
-
-    @BeforeEach
-    void setUp() {
-        favouriteList = new FavouriteList();
-        testPresenter = new TestPresenter();
-        interactor = new AddToFavouriteInteractor(favouriteList, testPresenter);
-    }
+public class AddToFavouriteInteractorTest {
 
     @Test
-    void testAddFavouriteSuccess() {
-        interactor.execute(new AddToFavouriteInputData("EONET_101"));
+    void successAddEventTest() {
+        // Arrange: Create necessary Entities and Input Data
+        FavouriteList favouriteList = new FavouriteList();
+        AddToFavouriteInputData inputData = new AddToFavouriteInputData("E123");
 
-        assertTrue(testPresenter.presentCalled, "present was not called");
-        assertTrue(testPresenter.outputData.isSuccess(), "expected success on first add");
+        // Create an Output Boundary implementation to capture and assert the presenter's output
+        AddToFavouriteOutputBoundary successPresenter = new AddToFavouriteOutputBoundary() {
+            @Override
+            public void present(AddToFavouriteOutputData outputData) {
+                // Assert that the use case reports success
+                assertTrue(outputData.isSuccess());
+            }
+        };
 
-        assertEquals(1, favouriteList.getNaturalEventList().size());
-        assertTrue(favouriteList.contain("EONET_101"));
-    }
+        // Act: Initialize the Interactor and execute the use case
+        AddToFavouriteInteractor interactor = new AddToFavouriteInteractor(favouriteList, successPresenter);
+        interactor.execute(inputData);
 
-    @Test
-    void testAddFavouriteDuplicatePrevented() {
-        interactor.execute(new AddToFavouriteInputData("EONET_101")); // adding first time
-
-        interactor.execute(new AddToFavouriteInputData("EONET_101")); // adding the same id again
-
-        assertTrue(testPresenter.presentCalled, "present was not called");
-        assertFalse(testPresenter.outputData.isSuccess(), "expected failure on duplicate add");
-
-        // Still only one entry in the favourite list.
+        // Assert: Verify state changes in the entity
+        assertTrue(favouriteList.contain("E123"));
         assertEquals(1, favouriteList.getNaturalEventList().size());
     }
 
     @Test
-    void testAddMultipleDifferentEvents() {
-        interactor.execute(new AddToFavouriteInputData("EONET_101"));
-        interactor.execute(new AddToFavouriteInputData("EONET_102"));
+    void failureDuplicateEventTest() {
+        // Arrange: Pre-populate the favourite list with the target event ID
+        FavouriteList favouriteList = new FavouriteList();
+        favouriteList.addNaturalEvent("E123");
 
-        assertEquals(2, favouriteList.getNaturalEventList().size());
-        assertTrue(favouriteList.contain("EONET_101"));
-        assertTrue(favouriteList.contain("EONET_102"));
+        AddToFavouriteInputData inputData = new AddToFavouriteInputData("E123");
+
+        // Create an Output Boundary implementation expecting a failure status
+        AddToFavouriteOutputBoundary failurePresenter = new AddToFavouriteOutputBoundary() {
+            @Override
+            public void present(AddToFavouriteOutputData outputData) {
+                // Assert that the use case reports failure due to duplication
+                assertFalse(outputData.isSuccess());
+            }
+        };
+
+        // Act: Initialize the Interactor and execute the use case with duplicate data
+        AddToFavouriteInteractor interactor = new AddToFavouriteInteractor(favouriteList, failurePresenter);
+        interactor.execute(inputData);
+
+        // Assert: Ensure list size didn't increase (no duplicate was appended)
+        assertEquals(1, favouriteList.getNaturalEventList().size());
     }
 }

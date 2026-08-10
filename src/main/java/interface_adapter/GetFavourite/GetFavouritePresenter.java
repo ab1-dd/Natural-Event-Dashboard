@@ -1,7 +1,7 @@
 package interface_adapter.GetFavourite;
 
-import use_case.GetFavourite.GetFavouriteOutputBoundary;
-import use_case.GetFavourite.GetFavouriteOutputData;
+import use_case.getFavourite.GetFavouriteOutputBoundary;
+import use_case.getFavourite.GetFavouriteOutputData;
 
 public class GetFavouritePresenter implements GetFavouriteOutputBoundary {
     private final GetFavouriteViewModel viewModel;

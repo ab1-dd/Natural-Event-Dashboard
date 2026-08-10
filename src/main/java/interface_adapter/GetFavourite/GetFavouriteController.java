@@ -1,7 +1,7 @@
 package interface_adapter.GetFavourite;
 
-import use_case.GetFavourite.GetFavouriteInputBoundary;
-import use_case.GetFavourite.GetFavouriteInputData;
+import use_case.getFavourite.GetFavouriteInputBoundary;
+import use_case.getFavourite.GetFavouriteInputData;
 
 public class GetFavouriteController {
     private final GetFavouriteInputBoundary inputBoundary;
